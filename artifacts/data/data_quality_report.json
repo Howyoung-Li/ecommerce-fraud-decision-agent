@@ -1,0 +1,136 @@
+{
+  "dataset": {
+    "rows": 151112,
+    "columns": [
+      "user_id",
+      "signup_time",
+      "purchase_time",
+      "purchase_value",
+      "device_id",
+      "source",
+      "browser",
+      "sex",
+      "age",
+      "ip_address",
+      "class",
+      "signup_to_purchase_seconds",
+      "is_fast_purchase_le_1s",
+      "country"
+    ],
+    "fraud_rows": 14151,
+    "legit_rows": 136961,
+    "fraud_rate": 0.09364577267192546,
+    "purchase_time_min": "2015-01-01 00:00:44",
+    "purchase_time_max": "2015-12-16 02:56:05",
+    "signup_time_min": "2015-01-01 00:00:42",
+    "signup_time_max": "2015-08-18 04:40:29",
+    "unmapped_country_rows": 21966,
+    "unmapped_country_rate": 0.1453623802212928
+  },
+  "fast_purchase_observation": {
+    "definition": "signup_to_purchase_seconds <= 1",
+    "business_hypothesis": "A purchase completed within one second after signup is operationally abnormal and may indicate automation, scripted abuse, or synthetic-data generation.",
+    "relationship_to_label": {
+      "rows": 7600,
+      "fraud_rows": 7600,
+      "fraud_rate": 1.0,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "lift_vs_baseline": 10.678538619178857
+    },
+    "interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+  },
+  "time_splits": [
+    {
+      "name": "train",
+      "rows": 105778,
+      "fraud_rows": 12077,
+      "fraud_rate": 0.11417307946832045,
+      "purchase_start": "2015-01-01 00:00:44",
+      "purchase_end": "2015-08-05 11:06:39",
+      "fast_purchase_rows": 7600,
+      "fast_purchase_fraud_rate": 1.0
+    },
+    {
+      "name": "valid",
+      "rows": 22667,
+      "fraud_rows": 1040,
+      "fraud_rate": 0.04588167821061455,
+      "purchase_start": "2015-08-05 11:07:00",
+      "purchase_end": "2015-09-14 02:11:33",
+      "fast_purchase_rows": 0,
+      "fast_purchase_fraud_rate": null
+    },
+    {
+      "name": "test",
+      "rows": 22667,
+      "fraud_rows": 1034,
+      "fraud_rate": 0.045616976220937924,
+      "purchase_start": "2015-09-14 02:14:58",
+      "purchase_end": "2015-12-16 02:56:05",
+      "fast_purchase_rows": 0,
+      "fast_purchase_fraud_rate": null
+    }
+  ],
+  "anomaly_relationships": [
+    {
+      "signal": "FAST_PURCHASE_LE_1S",
+      "rows": 7600,
+      "row_share": 0.05029382180104823,
+      "fraud_rows": 7600,
+      "fraud_rate": 1.0,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 10.678538619178857,
+      "usage": "Candidate rule or monitoring evidence"
+    },
+    {
+      "signal": "FAST_PURCHASE_LE_2MIN",
+      "rows": 7600,
+      "row_share": 0.05029382180104823,
+      "fraud_rows": 7600,
+      "fraud_rate": 1.0,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 10.678538619178857,
+      "usage": "Candidate rule or monitoring evidence"
+    },
+    {
+      "signal": "FAST_PURCHASE_LE_15MIN",
+      "rows": 7609,
+      "row_share": 0.05035338027423368,
+      "fraud_rows": 7602,
+      "fraud_rate": 0.9990800367985281,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 10.668714756603714,
+      "usage": "Candidate rule or monitoring evidence"
+    },
+    {
+      "signal": "REPEATED_DEVICE_FULL_DATA_EDA",
+      "rows": 19331,
+      "row_share": 0.12792498279421885,
+      "fraud_rows": 10141,
+      "fraud_rate": 0.5245977962857586,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 5.601937827173596,
+      "usage": "EDA/correlation evidence only; full-data repeated ID signals must not enter production model"
+    },
+    {
+      "signal": "REPEATED_IP_FULL_DATA_EDA",
+      "rows": 8360,
+      "row_share": 0.05532320398115305,
+      "fraud_rows": 7634,
+      "fraud_rate": 0.9131578947368421,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 9.751191844355429,
+      "usage": "EDA/correlation evidence only; full-data repeated ID signals must not enter production model"
+    },
+    {
+      "signal": "UNMAPPED_IP_COUNTRY",
+      "rows": 21966,
+      "row_share": 0.1453623802212928,
+      "fraud_rows": 1883,
+      "fraud_rate": 0.08572339069471001,
+      "baseline_fraud_rate": 0.09364577267192546,
+      "fraud_lift_vs_baseline": 0.9154005381004182,
+      "usage": "Candidate rule or monitoring evidence"
+    }
+  ]
+}

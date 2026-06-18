@@ -1,0 +1,11 @@
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw"
+ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+DATA_ARTIFACTS_DIR = ARTIFACTS_DIR / "data"
+AGENT_ARTIFACTS_DIR = ARTIFACTS_DIR / "agent"
+MODELING_ARTIFACTS_DIR = ARTIFACTS_DIR / "modeling"
+POLICY_ARTIFACTS_DIR = ARTIFACTS_DIR / "policy"
+POLICIES_DIR = PROJECT_ROOT / "policies"

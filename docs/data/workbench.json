@@ -1,0 +1,950 @@
+{
+  "project": {
+    "name": "E-commerce Fraud Decision Agent",
+    "positioning": "AI-first smart risk decision simulator with leakage-aware OOT validation."
+  },
+  "data_quality": {
+    "rows": 151112,
+    "fraud_rate": 0.09364577267192546,
+    "purchase_time_min": "2015-01-01 00:00:44",
+    "purchase_time_max": "2015-12-16 02:56:05",
+    "fast_purchase": {
+      "definition": "signup_to_purchase_seconds <= 1",
+      "business_hypothesis": "A purchase completed within one second after signup is operationally abnormal and may indicate automation, scripted abuse, or synthetic-data generation.",
+      "relationship_to_label": {
+        "rows": 7600,
+        "fraud_rows": 7600,
+        "fraud_rate": 1.0,
+        "baseline_fraud_rate": 0.09364577267192546,
+        "lift_vs_baseline": 10.678538619178857
+      },
+      "interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+    },
+    "time_splits": [
+      {
+        "name": "train",
+        "rows": 105778,
+        "fraud_rows": 12077,
+        "fraud_rate": 0.11417307946832045,
+        "purchase_start": "2015-01-01 00:00:44",
+        "purchase_end": "2015-08-05 11:06:39",
+        "fast_purchase_rows": 7600,
+        "fast_purchase_fraud_rate": 1.0
+      },
+      {
+        "name": "valid",
+        "rows": 22667,
+        "fraud_rows": 1040,
+        "fraud_rate": 0.04588167821061455,
+        "purchase_start": "2015-08-05 11:07:00",
+        "purchase_end": "2015-09-14 02:11:33",
+        "fast_purchase_rows": 0,
+        "fast_purchase_fraud_rate": null
+      },
+      {
+        "name": "test",
+        "rows": 22667,
+        "fraud_rows": 1034,
+        "fraud_rate": 0.045616976220937924,
+        "purchase_start": "2015-09-14 02:14:58",
+        "purchase_end": "2015-12-16 02:56:05",
+        "fast_purchase_rows": 0,
+        "fast_purchase_fraud_rate": null
+      }
+    ]
+  },
+  "modeling": {
+    "metrics": {
+      "logistic_regression": {
+        "train": {
+          "rows": 105778,
+          "fraud_rows": 12077,
+          "fraud_rate": 0.11417307946832045,
+          "roc_auc": 0.8498322402577364,
+          "pr_auc": 0.7426504779122303,
+          "ks": 0.6582889769691307,
+          "max_f1": 0.7713140944362732
+        },
+        "valid": {
+          "rows": 22667,
+          "fraud_rows": 1040,
+          "fraud_rate": 0.04588167821061455,
+          "roc_auc": 0.6309131036347017,
+          "pr_auc": 0.12920463763453405,
+          "ks": 0.24698338259511798,
+          "max_f1": 0.25909878682842286
+        },
+        "test": {
+          "rows": 22667,
+          "fraud_rows": 1034,
+          "fraud_rate": 0.045616976220937924,
+          "roc_auc": 0.6450237972808396,
+          "pr_auc": 0.13715971885752265,
+          "ks": 0.294696627698513,
+          "max_f1": 0.2757830404889228
+        }
+      },
+      "xgboost": {
+        "train": {
+          "rows": 105778,
+          "fraud_rows": 12077,
+          "fraud_rate": 0.11417307946832045,
+          "roc_auc": 0.874435116970528,
+          "pr_auc": 0.7730231100565486,
+          "ks": 0.6633778128815323,
+          "max_f1": 0.7742392073602266
+        },
+        "valid": {
+          "rows": 22667,
+          "fraud_rows": 1040,
+          "fraud_rate": 0.04588167821061455,
+          "roc_auc": 0.6195752682722095,
+          "pr_auc": 0.13443506299256835,
+          "ks": 0.24602295563593934,
+          "max_f1": 0.2603036876355748
+        },
+        "test": {
+          "rows": 22667,
+          "fraud_rows": 1034,
+          "fraud_rate": 0.045616976220937924,
+          "roc_auc": 0.6496270294479001,
+          "pr_auc": 0.14690020435042117,
+          "ks": 0.2953936339647295,
+          "max_f1": 0.27580952380952384
+        }
+      }
+    },
+    "xgboost_test_topk": [
+      {
+        "topk_rate": 0.01,
+        "review_volume": 227,
+        "fraud_captured": 74,
+        "precision_at_k": 0.3259911894273127,
+        "recall_at_k": 0.0715667311411992,
+        "baseline_fraud_rate": 0.0456169762209379,
+        "lift_vs_baseline": 7.146269139989264,
+        "model_name": "xgboost",
+        "evaluation_split": "test"
+      },
+      {
+        "topk_rate": 0.03,
+        "review_volume": 680,
+        "fraud_captured": 183,
+        "precision_at_k": 0.2691176470588235,
+        "recall_at_k": 0.1769825918762089,
+        "baseline_fraud_rate": 0.0456169762209379,
+        "lift_vs_baseline": 5.899506485379452,
+        "model_name": "xgboost",
+        "evaluation_split": "test"
+      },
+      {
+        "topk_rate": 0.05,
+        "review_volume": 1133,
+        "fraud_captured": 272,
+        "precision_at_k": 0.2400706090026478,
+        "recall_at_k": 0.2630560928433268,
+        "baseline_fraud_rate": 0.0456169762209379,
+        "lift_vs_baseline": 5.262747093097698,
+        "model_name": "xgboost",
+        "evaluation_split": "test"
+      },
+      {
+        "topk_rate": 0.1,
+        "review_volume": 2267,
+        "fraud_captured": 385,
+        "precision_at_k": 0.1698279664755183,
+        "recall_at_k": 0.3723404255319149,
+        "baseline_fraud_rate": 0.0456169762209379,
+        "lift_vs_baseline": 3.722911524275216,
+        "model_name": "xgboost",
+        "evaluation_split": "test"
+      },
+      {
+        "topk_rate": 0.2,
+        "review_volume": 4533,
+        "fraud_captured": 461,
+        "precision_at_k": 0.1016986543128171,
+        "recall_at_k": 0.4458413926499033,
+        "baseline_fraud_rate": 0.0456169762209379,
+        "lift_vs_baseline": 2.2294036724454793,
+        "model_name": "xgboost",
+        "evaluation_split": "test"
+      }
+    ],
+    "leakage_position": "Full-data repeated IP/device signals are used only for EDA. The model uses as-of historical counts and OOT validation."
+  },
+  "agent": {
+    "cases": [
+      {
+        "case": {
+          "case_id": "sim_439563",
+          "scenario": "normal_new_user",
+          "signup_to_purchase_seconds": 805507,
+          "purchase_value": 65,
+          "device_seen_user_count_hist": 1,
+          "ip_seen_user_count_hist": 1,
+          "source": "Direct",
+          "browser": "Chrome",
+          "country": "Japan",
+          "purchase_hour": 20,
+          "is_generated_case": true
+        },
+        "rule_score": 0.18,
+        "model_score": 0.6904,
+        "final_risk_score": 0.4097,
+        "decision": "step_up_verification",
+        "risk_level": "medium",
+        "reason_codes": [
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "evidence": "xgboost_model_score=0.6904",
+            "source": "trained_model",
+            "severity": "medium"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "text": "An elevated model score can support manual review or step-up verification, but it should not trigger automatic hard decline by itself. The score must be interpreted together with reason codes, out-of-time validation performance, and policy evidence.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Model Score Usage",
+            "retrieval_score": 0.6145
+          }
+        ],
+        "ai_risk_summary": "The case is routed to step_up_verification because 1 risk signal(s) were triggered: MODEL_SCORE_ELEVATED.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "normal_new_user"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 1
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.18
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.6904
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.4097
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 2
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "step_up_verification"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      },
+      {
+        "case": {
+          "case_id": "sim_574354",
+          "scenario": "fast_purchase_suspicious",
+          "signup_to_purchase_seconds": 112,
+          "purchase_value": 193,
+          "device_seen_user_count_hist": 2,
+          "ip_seen_user_count_hist": 2,
+          "source": "Direct",
+          "browser": "Safari",
+          "country": "China",
+          "purchase_hour": 1,
+          "is_generated_case": true
+        },
+        "rule_score": 0.92,
+        "model_score": 0.689,
+        "final_risk_score": 0.8161,
+        "decision": "manual_review",
+        "risk_level": "high",
+        "reason_codes": [
+          {
+            "code": "FAST_PURCHASE_AFTER_SIGNUP",
+            "evidence": "signup_to_purchase_seconds=112",
+            "source": "feature_rule",
+            "severity": "high"
+          },
+          {
+            "code": "DEVICE_REUSE_WEAK",
+            "evidence": "device_seen_user_count_hist=2",
+            "source": "historical_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "IP_REUSE_WEAK",
+            "evidence": "ip_seen_user_count_hist=2",
+            "source": "historical_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "evidence": "purchase_hour=1",
+            "source": "transaction_feature",
+            "severity": "low"
+          },
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "evidence": "xgboost_model_score=0.6890",
+            "source": "trained_model",
+            "severity": "medium"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "FAST_PURCHASE_ANOMALY",
+            "text": "`signup_to_purchase_seconds <= 1` is treated as a legitimate anomaly finding. The reasoning path is: 1. Business hypothesis: completing signup and purchase within one second is operationally abnormal. 2. Distributional finding: the dataset contains a large cluster of these cases. 3. Label relationship: all `<=1s` cases are labeled as fraud in this public dataset. 4. Risk usage: the signal can support anomaly reporting, rule-baseline comparison, reason codes, and monitoring. 5. Caveat: because the signal is concentrated in the early time window and the dataset appears synthetic, it should not be presented as a universal production fraud rule. This is not considered leakage by itself because the feature is available at transaction time. The concern is generalization, not future information.",
+            "source_name": "leakage_tradeoff_and_justification.md",
+            "source_path": "docs/leakage_tradeoff_and_justification.md",
+            "section": "Fast Purchase Anomaly",
+            "retrieval_score": 0.2474
+          },
+          {
+            "code": "DEVICE_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2835
+          },
+          {
+            "code": "IP_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2916
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Purchase Value And Night Activity",
+            "retrieval_score": 0.5101
+          },
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "text": "An elevated model score can support manual review or step-up verification, but it should not trigger automatic hard decline by itself. The score must be interpreted together with reason codes, out-of-time validation performance, and policy evidence.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Model Score Usage",
+            "retrieval_score": 0.6145
+          }
+        ],
+        "ai_risk_summary": "The case is routed to manual_review because 5 risk signal(s) were triggered: FAST_PURCHASE_AFTER_SIGNUP, DEVICE_REUSE_WEAK, IP_REUSE_WEAK, NIGHT_PURCHASE, MODEL_SCORE_ELEVATED.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "fast_purchase_suspicious"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 5
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.92
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.689
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.8161
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 6
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "manual_review"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      },
+      {
+        "case": {
+          "case_id": "sim_371590",
+          "scenario": "synthetic_fast_anomaly",
+          "signup_to_purchase_seconds": 1,
+          "purchase_value": 57,
+          "device_seen_user_count_hist": 2,
+          "ip_seen_user_count_hist": 2,
+          "source": "SEO",
+          "browser": "FireFox",
+          "country": "China",
+          "purchase_hour": 0,
+          "is_generated_case": true
+        },
+        "rule_score": 0.99,
+        "model_score": 0.9998,
+        "final_risk_score": 0.99,
+        "decision": "manual_review",
+        "risk_level": "high",
+        "reason_codes": [
+          {
+            "code": "FAST_PURCHASE_ANOMALY",
+            "evidence": "signup_to_purchase_seconds=1; dataset audit shows <=1 second purchases are highly concentrated in fraud labels",
+            "source": "data_audit + business_anomaly_hypothesis",
+            "severity": "critical"
+          },
+          {
+            "code": "DEVICE_REUSE_WEAK",
+            "evidence": "device_seen_user_count_hist=2",
+            "source": "historical_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "IP_REUSE_WEAK",
+            "evidence": "ip_seen_user_count_hist=2",
+            "source": "historical_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "evidence": "purchase_hour=0",
+            "source": "transaction_feature",
+            "severity": "low"
+          },
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "evidence": "xgboost_model_score=0.9998",
+            "source": "trained_model",
+            "severity": "medium"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "FAST_PURCHASE_ANOMALY",
+            "text": "`signup_to_purchase_seconds <= 1` is treated as a legitimate anomaly finding. The reasoning path is: 1. Business hypothesis: completing signup and purchase within one second is operationally abnormal. 2. Distributional finding: the dataset contains a large cluster of these cases. 3. Label relationship: all `<=1s` cases are labeled as fraud in this public dataset. 4. Risk usage: the signal can support anomaly reporting, rule-baseline comparison, reason codes, and monitoring. 5. Caveat: because the signal is concentrated in the early time window and the dataset appears synthetic, it should not be presented as a universal production fraud rule. This is not considered leakage by itself because the feature is available at transaction time. The concern is generalization, not future information.",
+            "source_name": "leakage_tradeoff_and_justification.md",
+            "source_path": "docs/leakage_tradeoff_and_justification.md",
+            "section": "Fast Purchase Anomaly",
+            "retrieval_score": 0.2474
+          },
+          {
+            "code": "DEVICE_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2835
+          },
+          {
+            "code": "IP_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2916
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Purchase Value And Night Activity",
+            "retrieval_score": 0.5101
+          },
+          {
+            "code": "MODEL_SCORE_ELEVATED",
+            "text": "An elevated model score can support manual review or step-up verification, but it should not trigger automatic hard decline by itself. The score must be interpreted together with reason codes, out-of-time validation performance, and policy evidence.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Model Score Usage",
+            "retrieval_score": 0.6145
+          }
+        ],
+        "ai_risk_summary": "The case is routed to manual_review because 5 risk signal(s) were triggered: FAST_PURCHASE_ANOMALY, DEVICE_REUSE_WEAK, IP_REUSE_WEAK, NIGHT_PURCHASE, MODEL_SCORE_ELEVATED.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "synthetic_fast_anomaly"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 5
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.99
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.9998
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.99
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 6
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "manual_review"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      },
+      {
+        "case": {
+          "case_id": "sim_647339",
+          "scenario": "reused_device_abuse",
+          "signup_to_purchase_seconds": 3692,
+          "purchase_value": 225,
+          "device_seen_user_count_hist": 10,
+          "ip_seen_user_count_hist": 3,
+          "source": "SEO",
+          "browser": "Safari",
+          "country": "Japan",
+          "purchase_hour": 1,
+          "is_generated_case": true
+        },
+        "rule_score": 0.74,
+        "model_score": 0.1694,
+        "final_risk_score": 0.4832,
+        "decision": "step_up_verification",
+        "risk_level": "medium",
+        "reason_codes": [
+          {
+            "code": "DEVICE_REUSE",
+            "evidence": "device_seen_user_count_hist=10",
+            "source": "historical_feature",
+            "severity": "high"
+          },
+          {
+            "code": "IP_REUSE_WEAK",
+            "evidence": "ip_seen_user_count_hist=3",
+            "source": "historical_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "HIGH_PURCHASE_VALUE",
+            "evidence": "purchase_value=225",
+            "source": "transaction_feature",
+            "severity": "medium"
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "evidence": "purchase_hour=1",
+            "source": "transaction_feature",
+            "severity": "low"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "DEVICE_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2835
+          },
+          {
+            "code": "IP_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2916
+          },
+          {
+            "code": "HIGH_PURCHASE_VALUE",
+            "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Purchase Value And Night Activity",
+            "retrieval_score": 0.5316
+          },
+          {
+            "code": "NIGHT_PURCHASE",
+            "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Purchase Value And Night Activity",
+            "retrieval_score": 0.5101
+          }
+        ],
+        "ai_risk_summary": "The case is routed to step_up_verification because 4 risk signal(s) were triggered: DEVICE_REUSE, IP_REUSE_WEAK, HIGH_PURCHASE_VALUE, NIGHT_PURCHASE.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "reused_device_abuse"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 4
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.74
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.1694
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.4832
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 5
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "step_up_verification"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      },
+      {
+        "case": {
+          "case_id": "sim_917241",
+          "scenario": "reused_ip_attack",
+          "signup_to_purchase_seconds": 2674,
+          "purchase_value": 258,
+          "device_seen_user_count_hist": 1,
+          "ip_seen_user_count_hist": 5,
+          "source": "Direct",
+          "browser": "IE",
+          "country": "United Kingdom",
+          "purchase_hour": 22,
+          "is_generated_case": true
+        },
+        "rule_score": 0.48,
+        "model_score": 0.5646,
+        "final_risk_score": 0.5181,
+        "decision": "step_up_verification",
+        "risk_level": "medium",
+        "reason_codes": [
+          {
+            "code": "IP_REUSE",
+            "evidence": "ip_seen_user_count_hist=5",
+            "source": "historical_feature",
+            "severity": "high"
+          },
+          {
+            "code": "HIGH_PURCHASE_VALUE",
+            "evidence": "purchase_value=258",
+            "source": "transaction_feature",
+            "severity": "medium"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "IP_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2916
+          },
+          {
+            "code": "HIGH_PURCHASE_VALUE",
+            "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Purchase Value And Night Activity",
+            "retrieval_score": 0.5316
+          }
+        ],
+        "ai_risk_summary": "The case is routed to step_up_verification because 2 risk signal(s) were triggered: IP_REUSE, HIGH_PURCHASE_VALUE.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "reused_ip_attack"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 2
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.48
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.5646
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.5181
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 3
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "step_up_verification"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      },
+      {
+        "case": {
+          "case_id": "sim_810017",
+          "scenario": "borderline_mixed_signal",
+          "signup_to_purchase_seconds": 1608,
+          "purchase_value": 180,
+          "device_seen_user_count_hist": 4,
+          "ip_seen_user_count_hist": 1,
+          "source": "Direct",
+          "browser": "FireFox",
+          "country": "United Kingdom",
+          "purchase_hour": 18,
+          "is_generated_case": true
+        },
+        "rule_score": 0.18,
+        "model_score": 0.2121,
+        "final_risk_score": 0.1945,
+        "decision": "approve",
+        "risk_level": "low",
+        "reason_codes": [
+          {
+            "code": "DEVICE_REUSE_WEAK",
+            "evidence": "device_seen_user_count_hist=4",
+            "source": "historical_feature",
+            "severity": "medium"
+          }
+        ],
+        "policy_citations": [
+          {
+            "code": "SYNTHETIC_DATA_CAVEAT",
+            "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Synthetic Data Caveat",
+            "retrieval_score": 0.6158
+          },
+          {
+            "code": "DEVICE_REUSE",
+            "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support.",
+            "source_name": "risk_policy.md",
+            "source_path": "policies/risk_policy.md",
+            "section": "Device And IP Reuse",
+            "retrieval_score": 0.2835
+          }
+        ],
+        "ai_risk_summary": "The case is routed to approve because 1 risk signal(s) were triggered: DEVICE_REUSE_WEAK.",
+        "limitations": "This is an AI-first risk simulation based on public anonymized data and generated case features. The judgment is evidence-constrained and should not be treated as a real-user fraud decision.",
+        "trace": [
+          {
+            "step": "generate_transaction",
+            "scenario": "borderline_mixed_signal"
+          },
+          {
+            "step": "build_reason_codes",
+            "count": 1
+          },
+          {
+            "step": "estimate_rule_score",
+            "score": 0.18
+          },
+          {
+            "step": "score_with_trained_model",
+            "score": 0.2121
+          },
+          {
+            "step": "blend_scores",
+            "score": 0.1945
+          },
+          {
+            "step": "retrieve_policy_citations",
+            "citation_count": 2
+          },
+          {
+            "step": "compose_ai_risk_summary",
+            "decision": "approve"
+          }
+        ],
+        "audit_context": {
+          "baseline_fraud_rate": 0.09364577267192546,
+          "fast_purchase_le_1s_fraud_rate": 1.0,
+          "fast_purchase_interpretation": "Treat this as a distributional anomaly that is strongly associated with fraud in this dataset. It can support a rule baseline and AI explanation, but should be monitored and validated before being generalized to production."
+        }
+      }
+    ],
+    "harness": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "pass_rate": 1.0,
+      "results": [
+        {
+          "name": "normal model-elevated case",
+          "scenario": "normal_new_user",
+          "seed": 7,
+          "passed": true,
+          "failures": [],
+          "decision": "step_up_verification",
+          "risk_level": "medium",
+          "reason_codes": [
+            "MODEL_SCORE_ELEVATED"
+          ],
+          "model_score": 0.6904,
+          "final_risk_score": 0.4097
+        },
+        {
+          "name": "fast purchase suspicious case",
+          "scenario": "fast_purchase_suspicious",
+          "seed": 11,
+          "passed": true,
+          "failures": [],
+          "decision": "manual_review",
+          "risk_level": "high",
+          "reason_codes": [
+            "FAST_PURCHASE_AFTER_SIGNUP",
+            "DEVICE_REUSE_WEAK",
+            "IP_REUSE_WEAK",
+            "NIGHT_PURCHASE",
+            "MODEL_SCORE_ELEVATED"
+          ],
+          "model_score": 0.689,
+          "final_risk_score": 0.8161
+        },
+        {
+          "name": "one-second anomaly case",
+          "scenario": "synthetic_fast_anomaly",
+          "seed": 13,
+          "passed": true,
+          "failures": [],
+          "decision": "manual_review",
+          "risk_level": "high",
+          "reason_codes": [
+            "FAST_PURCHASE_ANOMALY",
+            "DEVICE_REUSE_WEAK",
+            "IP_REUSE_WEAK",
+            "NIGHT_PURCHASE",
+            "MODEL_SCORE_ELEVATED"
+          ],
+          "model_score": 0.9998,
+          "final_risk_score": 0.99
+        },
+        {
+          "name": "reused device abuse case",
+          "scenario": "reused_device_abuse",
+          "seed": 17,
+          "passed": true,
+          "failures": [],
+          "decision": "step_up_verification",
+          "risk_level": "medium",
+          "reason_codes": [
+            "DEVICE_REUSE",
+            "IP_REUSE_WEAK",
+            "HIGH_PURCHASE_VALUE",
+            "NIGHT_PURCHASE"
+          ],
+          "model_score": 0.1694,
+          "final_risk_score": 0.4832
+        },
+        {
+          "name": "reused ip attack case",
+          "scenario": "reused_ip_attack",
+          "seed": 23,
+          "passed": true,
+          "failures": [],
+          "decision": "step_up_verification",
+          "risk_level": "medium",
+          "reason_codes": [
+            "IP_REUSE",
+            "HIGH_PURCHASE_VALUE"
+          ],
+          "model_score": 0.5646,
+          "final_risk_score": 0.5181
+        },
+        {
+          "name": "borderline mixed signal case",
+          "scenario": "borderline_mixed_signal",
+          "seed": 19,
+          "passed": true,
+          "failures": [],
+          "decision": "approve",
+          "risk_level": "low",
+          "reason_codes": [
+            "DEVICE_REUSE_WEAK"
+          ],
+          "model_score": 0.2121,
+          "final_risk_score": 0.1945
+        }
+      ]
+    }
+  }
+}

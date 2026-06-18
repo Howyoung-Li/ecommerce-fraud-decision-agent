@@ -1,0 +1,19 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Public datasets and large generated tables are intentionally excluded.
+data/raw/
+artifacts/data/feature_frame.csv
+artifacts/modeling/scored_transactions.csv
+
+# Rebuildable model binaries.
+artifacts/modeling/*.joblib
+
+# Local server/log outputs.
+*.log

@@ -1,0 +1,104 @@
+{
+  "total": 6,
+  "passed": 6,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "results": [
+    {
+      "name": "normal model-elevated case",
+      "scenario": "normal_new_user",
+      "seed": 7,
+      "passed": true,
+      "failures": [],
+      "decision": "step_up_verification",
+      "risk_level": "medium",
+      "reason_codes": [
+        "MODEL_SCORE_ELEVATED"
+      ],
+      "model_score": 0.6904,
+      "final_risk_score": 0.4097
+    },
+    {
+      "name": "fast purchase suspicious case",
+      "scenario": "fast_purchase_suspicious",
+      "seed": 11,
+      "passed": true,
+      "failures": [],
+      "decision": "manual_review",
+      "risk_level": "high",
+      "reason_codes": [
+        "FAST_PURCHASE_AFTER_SIGNUP",
+        "DEVICE_REUSE_WEAK",
+        "IP_REUSE_WEAK",
+        "NIGHT_PURCHASE",
+        "MODEL_SCORE_ELEVATED"
+      ],
+      "model_score": 0.689,
+      "final_risk_score": 0.8161
+    },
+    {
+      "name": "one-second anomaly case",
+      "scenario": "synthetic_fast_anomaly",
+      "seed": 13,
+      "passed": true,
+      "failures": [],
+      "decision": "manual_review",
+      "risk_level": "high",
+      "reason_codes": [
+        "FAST_PURCHASE_ANOMALY",
+        "DEVICE_REUSE_WEAK",
+        "IP_REUSE_WEAK",
+        "NIGHT_PURCHASE",
+        "MODEL_SCORE_ELEVATED"
+      ],
+      "model_score": 0.9998,
+      "final_risk_score": 0.99
+    },
+    {
+      "name": "reused device abuse case",
+      "scenario": "reused_device_abuse",
+      "seed": 17,
+      "passed": true,
+      "failures": [],
+      "decision": "step_up_verification",
+      "risk_level": "medium",
+      "reason_codes": [
+        "DEVICE_REUSE",
+        "IP_REUSE_WEAK",
+        "HIGH_PURCHASE_VALUE",
+        "NIGHT_PURCHASE"
+      ],
+      "model_score": 0.1694,
+      "final_risk_score": 0.4832
+    },
+    {
+      "name": "reused ip attack case",
+      "scenario": "reused_ip_attack",
+      "seed": 23,
+      "passed": true,
+      "failures": [],
+      "decision": "step_up_verification",
+      "risk_level": "medium",
+      "reason_codes": [
+        "IP_REUSE",
+        "HIGH_PURCHASE_VALUE"
+      ],
+      "model_score": 0.5646,
+      "final_risk_score": 0.5181
+    },
+    {
+      "name": "borderline mixed signal case",
+      "scenario": "borderline_mixed_signal",
+      "seed": 19,
+      "passed": true,
+      "failures": [],
+      "decision": "approve",
+      "risk_level": "low",
+      "reason_codes": [
+        "DEVICE_REUSE_WEAK"
+      ],
+      "model_score": 0.2121,
+      "final_risk_score": 0.1945
+    }
+  ]
+}

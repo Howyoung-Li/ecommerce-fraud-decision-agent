@@ -1,0 +1,128 @@
+[
+  {
+    "chunk_id": "risk_policy:01",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "Fast Purchase Behavior",
+    "text": "Very short signup-to-purchase intervals should be treated as abnormal first-purchase behavior. In this project, the `<=1 second` pattern is first identified as an unusual distributional phenomenon, then validated against the fraud label distribution. It is used as anomaly evidence and a rule-baseline reason code, not as a universal production truth."
+  },
+  {
+    "chunk_id": "risk_policy:02",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "Device And IP Reuse",
+    "text": "Multiple historical users sharing the same device or IP can indicate account farming, scripted abuse, or coordinated risk activity. These features must be computed with as-of historical logic before being used in model training or automated decision support."
+  },
+  {
+    "chunk_id": "risk_policy:03",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "Purchase Value And Night Activity",
+    "text": "High purchase value increases potential fraud exposure and should raise review priority when combined with fast purchase, device reuse, IP reuse, or elevated model score. Night-time purchase is not a fraud reason by itself, but it can be used as a weak contextual signal when other risk indicators co-occur."
+  },
+  {
+    "chunk_id": "risk_policy:04",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "Model Score Usage",
+    "text": "An elevated model score can support manual review or step-up verification, but it should not trigger automatic hard decline by itself. The score must be interpreted together with reason codes, out-of-time validation performance, and policy evidence."
+  },
+  {
+    "chunk_id": "risk_policy:05",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "Synthetic Data Caveat",
+    "text": "This project uses public anonymized e-commerce fraud data with synthetic-like anomalies. Generated case judgments are controlled simulations for risk analytics and agent evaluation. They should not be presented as real-user fraud decisions or universal production rules."
+  },
+  {
+    "chunk_id": "risk_policy:06",
+    "source_path": "policies/risk_policy.md",
+    "source_name": "risk_policy.md",
+    "section": "AI Decision Boundary",
+    "text": "The AI layer may summarize risk, cite policy, draft review notes, and route cases to tools. It should not independently decide real-user fraud without model, rule, policy, and human-review safeguards."
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:01",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Why The Public Notebook Looks Stronger",
+    "text": "The reference notebook achieves much stronger precision and recall because it uses two highly predictive signals: - `signup_to_purchase_seconds <= 1` - repeated `device_id` or repeated `ip_address` computed on the full dataset These signals are useful for exploratory analysis, but they are not equally safe for production-style modeling."
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:02",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Fast Purchase Anomaly",
+    "text": "`signup_to_purchase_seconds <= 1` is treated as a legitimate anomaly finding. The reasoning path is: 1. Business hypothesis: completing signup and purchase within one second is operationally abnormal. 2. Distributional finding: the dataset contains a large cluster of these cases. 3. Label relationship: all `<=1s` cases are labeled as fraud in this public dataset. 4. Risk usage: the signal can support anomaly reporting, rule-baseline comparison, reason codes, and monitoring. 5. Caveat: because the signal is concentrated in the early time window and the dataset appears synthetic, it should not be presented as a universal production fraud rule. This is not considered leakage by itself because the feature is available at transaction time. The concern is generalization, not future information."
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:03",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Full-Data Repeated IP/Device Leakage",
+    "text": "Full-data repeated ID flags answer this question: ```text Does this IP/device appear more than once anywhere in the complete dataset? ``` That is not the same as the production-time question: ```text How many times had this IP/device appeared before this transaction happened? ``` The full-data version can use future transactions to label an earlier transaction as repeated. That creates information leakage because, in a live scoring system, future events are unavailable. Therefore: - Full-data repeated IP/device is allowed for EDA and anomaly diagnosis. - It is not allowed as a main model feature. - The production-style model uses as-of historical counts instead: - `device_seen_count_hist` - `ip_seen_count_hist`"
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:04",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Why Accept Lower OOT Metrics",
+    "text": "The project intentionally uses purchase-time train/validation/test splits. This makes the model evaluation stricter because: - The `<=1s` anomaly appears in the training period but not in validation/test. - Fraud rate shifts from about 11.4% in train to about 4.6% in valid/test. - Future-period behavior is harder to predict than randomly mixed behavior. The lower OOT metrics are therefore informative. They show that a high random-split score would overstate production readiness."
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:05",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Project Decision",
+    "text": "The project separates three layers: 1. EDA anomaly layer - Can use full-data views to discover suspicious patterns. - Must label them as exploratory and non-production. 2. Production-style modeling layer - Uses only transaction-time and historical-as-of features. - Evaluates on out-of-time validation and test windows. 3. AI risk decision layer - Uses model score, rule signals, anomaly audit, policy citations, and limitations. - Does not hide weak OOT performance. - Routes cases to review or step-up verification rather than claiming fully automated fraud decisions."
+  },
+  {
+    "chunk_id": "leakage_tradeoff_and_justification:06",
+    "source_path": "docs/leakage_tradeoff_and_justification.md",
+    "source_name": "leakage_tradeoff_and_justification.md",
+    "section": "Interview Framing",
+    "text": "Strong answer: > I found that the public notebook's high precision and recall mainly come from one-second purchase anomalies and full-data repeated IP/device flags. The one-second purchase feature is available at transaction time, so I keep it as anomaly evidence and a reason code, but I add a generalization caveat because it is concentrated in the early window. For IP/device reuse, I do not use the full-data repeated flag in the production-style model because it leaks future information. I replace it with as-of historical counts and evaluate with an out-of-time split. The metrics become lower, but they are more honest and closer to how a risk model would behave after deployment."
+  },
+  {
+    "chunk_id": "modeling_summary:01",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "Feature Governance",
+    "text": "The model uses leakage-aware features: - `signup_to_purchase_seconds` - `is_fast_purchase_le_1s` - `is_flash_purchase_le_2min` - purchase amount and time features - as-of historical device count - as-of historical IP count - source, browser, and country The model does not use full-data repeated device/IP flags. The model does not use `sex` as a decision feature. This is intentional because demographic attributes are not needed for the smart risk demo and can create fairness/governance concerns. See `docs/leakage_tradeoff_and_justification.md` for the detailed rationale behind the leakage and evaluation tradeoff."
+  },
+  {
+    "chunk_id": "modeling_summary:02",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "Model Design",
+    "text": "Models trained: - Logistic Regression baseline - XGBoost risk scoring model Split design: - Train: earliest 70% by purchase time - Validation: next 15% - Test: latest 15% This out-of-time design is deliberately stricter than random KFold because fraud behavior and synthetic anomalies shift over time."
+  },
+  {
+    "chunk_id": "modeling_summary:03",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "Metrics",
+    "text": "| Model | Split | ROC-AUC | PR-AUC | KS | Fraud Rate | |---|---|---:|---:|---:|---:| | Logistic Regression | Train | 0.8498 | 0.7427 | 0.6583 | 0.1142 | | Logistic Regression | Valid | 0.6309 | 0.1292 | 0.2470 | 0.0459 | | Logistic Regression | Test | 0.6450 | 0.1372 | 0.2947 | 0.0456 | | XGBoost | Train | 0.8744 | 0.7730 | 0.6634 | 0.1142 | | XGBoost | Valid | 0.6196 | 0.1344 | 0.2460 | 0.0459 | | XGBoost | Test | 0.6496 | 0.1469 | 0.2954 | 0.0456 |"
+  },
+  {
+    "chunk_id": "modeling_summary:04",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "TopK Review Strategy",
+    "text": "XGBoost test-set TopK results: | TopK | Review Volume | Fraud Captured | Precision@K | Recall@K | Lift | |---:|---:|---:|---:|---:|---:| | 1% | 227 | 74 | 0.3260 | 0.0716 | 7.15x | | 3% | 680 | 183 | 0.2691 | 0.1770 | 5.90x | | 5% | 1,133 | 272 | 0.2401 | 0.2631 | 5.26x | | 10% | 2,267 | 385 | 0.1698 | 0.3723 | 3.72x | | 20% | 4,533 | 461 | 0.1017 | 0.4458 | 2.23x |"
+  },
+  {
+    "chunk_id": "modeling_summary:05",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "Interpretation",
+    "text": "The OOT metrics are meaningfully weaker than train metrics. This is a feature, not a failure of the project: it shows that the early synthetic anomaly does not fully generalize into later periods. The business value is in ranking and triage: - The model is not strong enough to support automatic hard decline by itself. - It is useful for prioritizing manual review or step-up verification. - Top 5% review captures about 26.31% of fraud on the OOT test set with about 5.26x lift over baseline."
+  },
+  {
+    "chunk_id": "modeling_summary:06",
+    "source_path": "docs/modeling_summary.md",
+    "source_name": "modeling_summary.md",
+    "section": "AI Integration",
+    "text": "Generated-case judgment now combines: - Rule score - XGBoost model score - Final blended risk score - Reason codes - Policy citations - Limitations about public synthetic-like data - Trace output This makes the demo closer to an intelligent risk analyst workflow rather than a pure model benchmark."
+  }
+]
