@@ -2,6 +2,8 @@
 
 AI-first smart risk decision simulator built on public e-commerce fraud data.
 
+Static workbench: https://howyoung-li.github.io/ecommerce-fraud-decision-agent/
+
 The project uses public transaction data as a structured risk environment, then adds an auditable AI risk analyst layer. The AI layer generates or samples transaction scenarios, checks anomaly signals, cites risk policy, and produces structured judgments with limitations.
 
 ## Current MVP
