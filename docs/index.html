@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>E-commerce Fraud Decision Agent</title>
+    <title>电商反欺诈智能风控 Agent</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <header class="topbar">
       <div>
-        <p class="eyebrow">AI-first smart risk workbench</p>
-        <h1>E-commerce Fraud Decision Agent</h1>
+        <p class="eyebrow">AI 智能风控分析工作台</p>
+        <h1>电商反欺诈智能风控 Agent</h1>
       </div>
-      <div class="status-pill" id="harnessStatus">Harness loading</div>
+      <div class="status-pill" id="harnessStatus">评测加载中</div>
     </header>
 
     <main>
-      <section class="metric-band" aria-label="Project metrics">
+      <section class="metric-band" aria-label="项目指标">
         <div class="metric">
           <span>OOT ROC-AUC</span>
           <strong id="rocAuc">--</strong>
@@ -26,11 +26,11 @@
           <strong id="prAuc">--</strong>
         </div>
         <div class="metric">
-          <span>Top 5% Lift</span>
+          <span>Top 5% 审核提升</span>
           <strong id="topLift">--</strong>
         </div>
         <div class="metric">
-          <span>Fast Purchase Lift</span>
+          <span>极短购买提升</span>
           <strong id="fastLift">--</strong>
         </div>
       </section>
@@ -38,8 +38,8 @@
       <section class="workspace">
         <aside class="scenario-panel">
           <div class="panel-header">
-            <h2>Generated Cases</h2>
-            <button id="nextCase" type="button">Next Case</button>
+            <h2>生成案例</h2>
+            <button id="nextCase" type="button">下一个案例</button>
           </div>
           <div id="caseList" class="case-list"></div>
         </aside>
@@ -47,55 +47,55 @@
         <section class="decision-panel">
           <div class="decision-header">
             <div>
-              <p class="eyebrow" id="scenarioName">Scenario</p>
-              <h2 id="caseId">Case</h2>
+              <p class="eyebrow" id="scenarioName">场景</p>
+              <h2 id="caseId">案例</h2>
             </div>
             <div class="decision-badge" id="decisionBadge">--</div>
           </div>
 
           <div class="score-grid">
             <div>
-              <span>Rule Score</span>
+              <span>规则分</span>
               <strong id="ruleScore">--</strong>
             </div>
             <div>
-              <span>Model Score</span>
+              <span>模型分</span>
               <strong id="modelScore">--</strong>
             </div>
             <div>
-              <span>Final Risk</span>
+              <span>综合风险分</span>
               <strong id="finalScore">--</strong>
             </div>
             <div>
-              <span>Risk Level</span>
+              <span>风险等级</span>
               <strong id="riskLevel">--</strong>
             </div>
           </div>
 
           <div class="columns">
             <section>
-              <h3>Transaction</h3>
+              <h3>交易信息</h3>
               <dl id="transactionFacts" class="facts"></dl>
             </section>
             <section>
-              <h3>AI Summary</h3>
+              <h3>AI 风险摘要</h3>
               <p id="aiSummary" class="summary"></p>
               <p id="limitations" class="limitations"></p>
             </section>
           </div>
 
           <section>
-            <h3>Reason Codes</h3>
+            <h3>风险原因码</h3>
             <div id="reasonCodes" class="reason-grid"></div>
           </section>
 
           <section>
-            <h3>Policy Evidence</h3>
+            <h3>策略证据</h3>
             <div id="policyCitations" class="citation-list"></div>
           </section>
 
           <section>
-            <h3>Trace</h3>
+            <h3>工具调用链路</h3>
             <div id="trace" class="trace"></div>
           </section>
         </section>
@@ -103,16 +103,16 @@
 
       <section class="bottom-grid">
         <section class="table-panel">
-          <h2>TopK Review Strategy</h2>
+          <h2>TopK 人工审核策略</h2>
           <table>
             <thead>
               <tr>
                 <th>TopK</th>
-                <th>Review</th>
-                <th>Fraud</th>
-                <th>Precision</th>
-                <th>Recall</th>
-                <th>Lift</th>
+                <th>审核量</th>
+                <th>召回欺诈</th>
+                <th>准确率</th>
+                <th>召回率</th>
+                <th>提升倍数</th>
               </tr>
             </thead>
             <tbody id="topkTable"></tbody>
@@ -120,7 +120,7 @@
         </section>
 
         <section class="harness-panel">
-          <h2>Harness</h2>
+          <h2>自动化评测</h2>
           <div id="harnessList" class="harness-list"></div>
         </section>
       </section>
